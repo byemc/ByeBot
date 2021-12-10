@@ -1,16 +1,15 @@
 import os
-from discord.ext import commands
-import discord
+from nextcord.ext import commandsimport nextcord
 import sys
 import datetime, time #this is the important set for generating an uptime
 import platform
-import logging
-
-logging.basicConfig(level=logging.WARNING)
+import random
 
 APIKEY = os.environ['DISCORD_API']
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('|'))
+defaultHelp = commands.DefaultHelpCommand()
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('|'), help_command=defaultHelp)
+
 
 @bot.event
 async def on_ready():
@@ -22,26 +21,55 @@ guild_ids = [827083552155238460, 885454145346232361] # Put your server ID in thi
 
 # Regular commands (command_prefix)
 
-@bot.command(name="info", description="Info about the bot")
-async def _info(ctx):
-    uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
-    userAvatarUrl = ctx.message.author.avatar_url
-    embed=discord.Embed(title="ByeBot Details", description=f"Running on {len(bot.guilds)} servers")
-    embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar_url}")
-    embed.add_field(name="Creator", value="ByeMC", inline=True)
-    embed.add_field(name="Server", value="Replit", inline=True)
-    embed.add_field(name="Uptime", value=uptime, inline=True)
-    embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
-    embed.add_field(name="Language", value=f"Python {platform.python_version()}")
-    await ctx.send(embed=embed)
+class misc(commands.Cog, name='Misc.'):
+    def __init__(self, bot):
+        self.bot = bot
 
-@bot.command(name="avatar", description="Returns the avatar of the requested user")
-async def _avatar(ctx, member: discord.Member):
-    userAvatarUrl = ctx.message.author.avatar_url
-    embed=discord.Embed(title=f"{member.display_name}'s avatar")
-    embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar_url}")
-    embed.set_image(url=member.avatar_url)
-    embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
-    await ctx.send(embed=embed)
+    @commands.command(name="botinfo", aliases=["info", "bot"], brief="Info about the bot", description="Info about the bot")
+    async def _botinfo(self, ctx):
+        uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
+        userAvatarUrl = ctx.message.author.avatar_url
+        embed=nextcord.Embed(title="ByeBot Details", description=f"Running on {len(self.bot.guilds)} servers")
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
+        embed.set_author(name=f"ByeBot", icon_url=f"{self.bot.user.avatar_url}")
+        embed.add_field(name="Creator", value="[Bye](https://twitter.com/_byemc)", inline=True)
+        embed.add_field(name="Server", value="Replit", inline=True)
+        embed.add_field(name="Uptime", value=uptime, inline=True)
+        embed.add_field(name="Latency", value=f"{round(self.bot.latency*1000)}ms")
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+        embed.add_field(name="Language", value=f"Python {platform.python_version()}")
+        await ctx.send(embed=embed)
+
+    @commands.command(name="avatar", brief="Get a user's avatar", description="Returns the avatar of the requested user")
+    async def _avatar(self, ctx, member: nextcord.Member):
+        userAvatarUrl = ctx.message.author.avatar_url
+        embed=nextcord.Embed(title=f"{member.display_name}'s avatar")
+        embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar_url}")
+        embed.set_image(url=member.avatar_url)
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+        await ctx.send(embed=embed)
+
+    @commands.command(name="ping", brief="Times the latency of the bot", description="Finds the amount of time between sending the message and the bot responding. Returns an embed with the time in ms")
+    async def _ping(self, ctx):
+        userAvatarUrl = ctx.message.author.avatar_url
+        embed=nextcord.Embed(title=":ping_pong: Pong!", description=f"{round(self.bot.latency*1000)}ms")
+        embed.set_author(name="ByeBot", icon_url=f"{bot.user.avatar_url}")
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+        await ctx.send(embed=embed)
+
+
+class fun(commands.Cog, name='Fun'):
+    '''Things that are fun... *i hope!*'''
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(name="dice", brief="Roll a die... or maybe two!", description="Picks a number between 1 and 6, or between 1 and the number provided multiplied by 6.")
+    async def dice(self,ctx,no_of_dice=1):
+        result = random.randint(1,(6*int(no_of_dice)))
+        await ctx.send(f"{ctx.message.author.mention} You rolled a {result}!")
+
+# Add Cogs
+bot.add_cog(misc(bot))
+bot.add_cog(fun(bot))
 
 bot.run(APIKEY)

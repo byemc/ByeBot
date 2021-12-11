@@ -6,12 +6,14 @@ import platform
 import random
 from dotenv import load_dotenv
 
-load_dotenv()
+myPermissionsInt = 405810835062
+
+load_dotenv() # this is used with .env
 
 APIKEY = os.environ['DISCORD_API']
 
 defaultHelp = commands.DefaultHelpCommand()
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('|', '?'), help_command=defaultHelp)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('|', '?', 'bye!', 'bb?', 'bb!', 'bye?'), help_command=defaultHelp)
 
 @bot.event
 async def on_ready():
@@ -70,8 +72,22 @@ class fun(commands.Cog, name='Fun'):
         result = random.randint(1,(6*int(no_of_dice)))
         await ctx.send(f"{ctx.message.author.mention} You rolled a {result}!")
 
+class tools(commands.Cog, name="Tools"):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(name="botinvite", brief="Get the invite link for a bot", description="Makes an invite link for a requested bot. Made by Taureon#5684 (492665478687490048)")
+    async def _botinvite(self,ctx,thebot:nextcord.Member,permissions:int=myPermissionsInt):
+        print(f"{thebot} - {type(thebot)}")
+        userAvatarUrl = ctx.message.author.avatar
+        embed=nextcord.Embed(title=f"{thebot.display_name}'s invite link", description=f"[Here you go!](https://discord.com/oauth2/authorize?client_id={thebot.id}&scope=bot&permissions={permissions})")
+        embed.set_author(name=f"ByeBot | Thanks to Taureon!", icon_url=f"{bot.user.avatar}")
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+        await ctx.send(embed=embed)
+
 # Add Cogs
 bot.add_cog(misc(bot))
 bot.add_cog(fun(bot))
+bot.add_cog(tools(bot))
 
 bot.run(APIKEY)

@@ -77,9 +77,10 @@ class tools(commands.Cog, name="Tools"):
         self.bot = bot
 
     @commands.command(name="botinvite", brief="Get the invite link for a bot", description="Makes an invite link for a requested bot. Made by Taureon#5684 (492665478687490048)")
-    async def _botinvite(self,ctx,thebot:nextcord.Member,permissions:int=myPermissionsInt):
-        print(f"{thebot} - {type(thebot)}")
+    async def _botinvite(self,ctx,thebot:nextcord.Member,permissions:int=8):
         userAvatarUrl = ctx.message.author.avatar
+        if permissions == 8:
+            await ctx.send(":warning: WARNING: This link gives the bot admin perms! For more information about permissions integers, please see the attached link. https://discordapi.com/permissions.html")
         embed=nextcord.Embed(title=f"{thebot.display_name}'s invite link", description=f"[Here you go!](https://discord.com/oauth2/authorize?client_id={thebot.id}&scope=bot&permissions={permissions})")
         embed.set_author(name=f"ByeBot | Thanks to Taureon!", icon_url=f"{bot.user.avatar}")
         embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)

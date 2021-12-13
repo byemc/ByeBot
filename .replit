@@ -1,2 +1,2 @@
 language = "bash"
-run = "pip install -r requirements.txt && python3 bot.py"
+run = "pip install -U -r requirements.txt && python3 bot.py"

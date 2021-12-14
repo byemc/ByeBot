@@ -1,4 +1,3 @@
-discord-py-interactions
 nextcord[voice]
 python-dotenv
 python-whois

@@ -6,10 +6,12 @@ import datetime, time #this is the important set for generating an uptime
 import platform
 import random
 from dotenv import load_dotenv
+import whois
 
 myPermissionsInt = 405810835062
 
-load_dotenv() # this is used with .env
+#import .env variables
+load_dotenv()
 
 APIKEY = os.environ['DISCORD_API']
 
@@ -58,7 +60,7 @@ class misc(commands.Cog, name='Misc.'):
     async def _ping(self, ctx):
         userAvatarUrl = ctx.message.author.avatar
         embed=nextcord.Embed(title=":ping_pong: Pong!", description=f"{round(self.bot.latency*1000)}ms")
-        embed.set_author(name="ByeBot", icon_url=f"{bot.user.avatar}")
+        embed.set_author(name="ByeBot", icon_url=bot.user.avatar)
         embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
         await ctx.send(embed=embed)
 
@@ -87,7 +89,38 @@ class tools(commands.Cog, name="Tools"):
         embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
         await ctx.send(embed=embed)
 
-
+    @commands.command(name="whois", brief="Run a WHOIS search on an IP or web address.", description="Runs a WHOIS search on an IP or web address.")
+    async def _whois(self,ctx,query,value=None):
+        '''
+        Run a WHOIS search on an IP or web address. 
+        INPUTS:
+        query: The IP/Site you want to search for.
+        value: The value you want. You can leave this blank for an overview. Please use a key returned by "python-whois", like "org"'''
+        if value == None:
+            userAvatarUrl = ctx.message.author.avatar
+            embed=nextcord.Embed(title=f"WHOIS Lookup for {query}")
+            query = whois.whois(query)
+            if type(query['domain_name']) == list:
+                embed.add_field(name="Domain Name/IP", value=f"{query['domain_name'][1]}", inline=True)
+            else:
+                embed.add_field(name="Domain Name/IP", value=f"{query['domain_name']}", inline=True)
+            embed.add_field(name="Registrar", value=f"{query['registrar']}", inline=True)
+            embed.add_field(name="Organization", value=f"{query['org']}", inline=True)
+            embed.add_field(name="Registration Date", value=f"{query['creation_date']}", inline=True)
+            if type(query['expiration_date']) == list:
+                embed.add_field(name="Expiration Date", value=f"{query['expiration_date'][1]}", inline=True)
+            else:
+                embed.add_field(name="Expiration Date", value=f"{query['expiration_date']}", inline=True)
+            if type(query['updated_date']) == list:
+                embed.add_field(name="Updated Date", value=f"{query['updated_date'][0]}", inline=True)
+            else:
+                embed.add_field(name="Updated Date", value=f"{query['updated_date']}", inline=True)
+            embed.add_field(name="Country", value=f"{query['country']}", inline=True)
+            embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar}")
+            embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send(f"{ctx.message.author.mention} The {value} for {query} is `{whois.whois(query)[value]}`")
 
 # Add Cogs
 bot.add_cog(misc(bot))

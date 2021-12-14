@@ -44,15 +44,6 @@ class misc(commands.Cog, name='Misc.'):
         embed.add_field(name="Language", value=f"Python {platform.python_version()}")
         await ctx.send(embed=embed)
 
-    @commands.command(name="avatar", brief="Get a user's avatar", description="Returns the avatar of the requested user")
-    async def _avatar(self, ctx, member: nextcord.Member):
-        userAvatarUrl = ctx.message.author.avatar
-        embed=nextcord.Embed(title=f"{member.display_name}'s avatar")
-        embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar}")
-        embed.set_image(url=member.avatar)
-        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
-        await ctx.send(embed=embed)
-
     @commands.command(name="ping", brief="Times the latency of the bot", description="Finds the amount of time between sending the message and the bot responding. Returns an embed with the time in ms")
     async def _ping(self, ctx):
         userAvatarUrl = ctx.message.author.avatar
@@ -61,6 +52,14 @@ class misc(commands.Cog, name='Misc.'):
         embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
         await ctx.send(embed=embed)
 
+    @commands.command(name="uptime", brief="Bot's uptime", description="Gets the bot's uptime in HH:MM:SS")
+    async def _uptime(self,ctx):
+        uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
+        userAvatarUrl = ctx.message.author.avatar
+        embed=nextcord.Embed(title="Uptime", description=f"Uptime: {uptime}")
+        embed.set_author(name=f"ByeBot", icon_url=f"{self.bot.user.avatar}")
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+        await ctx.send(embed=embed)
 
 class fun(commands.Cog, name='Fun'):
     '''Things that are fun... *i hope!*'''
@@ -83,6 +82,15 @@ class tools(commands.Cog, name="Tools"):
             await ctx.send(":warning: WARNING: This link gives the bot admin perms! For more information about permissions integers, please see the attached link. https://discordapi.com/permissions.html")
         embed=nextcord.Embed(title=f"{thebot.display_name}'s invite link", description=f"[Here you go!](https://discord.com/oauth2/authorize?client_id={thebot.id}&scope=bot&permissions={permissions})")
         embed.set_author(name=f"ByeBot | Thanks to Taureon!", icon_url=f"{bot.user.avatar}")
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
+        await ctx.send(embed=embed)
+    
+    @commands.command(name="avatar", brief="Get a user's avatar", description="Returns the avatar of the requested user")
+    async def _avatar(self, ctx, member: nextcord.Member):
+        userAvatarUrl = ctx.message.author.avatar
+        embed=nextcord.Embed(title=f"{member.display_name}'s avatar")
+        embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar}")
+        embed.set_image(url=member.avatar)
         embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
         await ctx.send(embed=embed)
 

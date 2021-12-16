@@ -111,9 +111,17 @@ class tools(commands.Cog, name="Tools"):
                         embed.add_field(name=f"{result}", value=f"{query[result][1]}", inline=True)
                     else:
                         embed.add_field(name=f"{result}", value=f"{query[result]}", inline=True)
+
                 await ctx.send(embed=embed)
             else:
                 await ctx.send(f"{ctx.message.author.mention} The {value} for {query} is `{whois.whois(query)[value]}`")
+
+    @_whois.error
+    async def whois_error(self,ctx,error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(f"{ctx.message.author.mention} Please provide a domain or IP. EG. `google.com` or `1.1.1.1`")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(f"{ctx.message.author.mention} BadArgument.")
 
 # Add Cogs
 bot.add_cog(misc(bot))

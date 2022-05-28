@@ -7,8 +7,16 @@ import platform
 import random
 from dotenv import load_dotenv
 import whois
+import sqlite3
+import requests,json
+import server, aiohttp
 
 myPermissionsInt = 405810835062
+
+debugMode = False
+
+version = (0,1,0)
+verstring = f"{version[0]}.{version[1]}.{version[2]}"
 
 #import .env variables
 load_dotenv()
@@ -21,6 +29,15 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or('|', '?', 'bye!', '
 @bot.event
 async def on_ready():
     print(f"Connected to Discord as {bot.user.name} ({bot.user.id})")
+    bot.server = server.HTTPServer(
+        bot=bot,
+        host="0.0.0.0",
+        port="8000",
+    )
+    await bot.server.start()
+
+    if debugMode:
+        await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="Currently in debug mode. Expect me to go down!"))
     global startTime #global variable to be used later in cog
     startTime = time.time() #snapshot of time when listener sends on_ready
 
@@ -122,10 +139,53 @@ class tools(commands.Cog, name="Tools"):
             await ctx.send(f"{ctx.message.author.mention} Please provide a domain or IP. EG. `google.com` or `1.1.1.1`")
         elif isinstance(error, commands.BadArgument):
             await ctx.send(f"{ctx.message.author.mention} BadArgument.")
+class GitHub(commands.Cog, name="GitHub"):
+
+    def __init__(self, bot):
+        self.bot = bot
+    
+    @commands.command(name="repo", breif="See repo info", description="Gets info about a repository on GitHub")
+    async def _repo(self,ctx,repo:str):
+        userAvatarUrl = ctx.message.author.avatar
+        async with ctx.channel.typing():
+
+            repo_info_request = requests.get(f"https://api.github.com/repos/{repo}")
+            repo_info = repo_info_request.json()
+
+
+            embed = nextcord.Embed(title=f"{repo_info['full_name']}", description=f"{repo_info['description']}", url=f"{repo_info['html_url']}")
+            
+            embed.set_thumbnail(url=f"{repo_info['owner']['avatar_url']}")
+
+            embed.add_field(name="Owner", value=f"{repo_info['owner']['login']}")
+            embed.add_field(name="Stars", value=f"{repo_info['stargazers_count']}", inline=True)
+            embed.add_field(name="Forks", value=f"{repo_info['forks_count']}", inline=True)
+            embed.add_field(name="Watchers", value=f"{repo_info['watchers_count']}", inline=True)
+            embed.add_field(name="Open Issues", value=f"{repo_info['open_issues_count']}", inline=True)
+            embed.add_field(name="Language", value=f"{repo_info['language']}", inline=True)
+            embed.add_field(name="License", value=f"{repo_info['license']}", inline=True)
+            embed.add_field(name="Is a fork?", value=f"{repo_info['fork']}")
+            embed.add_field(name="Created at", value=f"{repo_info['created_at']}", inline=True)
+            embed.add_field(name="Updated at", value=f"{repo_info['updated_at']}", inline=True)
+            embed.add_field(name="Pushed at", value=f"{repo_info['pushed_at']}", inline=True)
+
+
+            embed.set_author(name=f"ByeBot", icon_url=f"{bot.user.avatar}")
+            embed.set_footer(text=f"Requested by {ctx.message.author} | Remaining GET requests: {repo_info_request.headers['X-RateLimit-Remaining']}", icon_url=userAvatarUrl)
+        await ctx.send(embed=embed)
+
+@server.add_route(path="/info", method="GET")
+async def http_info(request):
+    return aiohttp.web.json_response(data={"online": True, "version": verstring, "verarray": [version[0], version[1], version[2]], "debug": debugMode}, status=200)
+@server.add_route(path="/", method="GET")
+async def http_index(request):
+    '''Returns a redirect to `byemc.xyz/byebot`'''
+    return aiohttp.web.HTTPFound(location="https://byemc.xyz/byebot")
 
 # Add Cogs
 bot.add_cog(misc(bot))
 bot.add_cog(fun(bot))
 bot.add_cog(tools(bot))
+#bot.add_cog(GitHub(bot))
 
 bot.run(APIKEY)

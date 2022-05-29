@@ -1,7 +1,0 @@
-DROP TABLE IF EXISTS gh_cache;
-
-CREATE TABLE gh_cache (
-  path TEXT PRIMARY KEY,
-  data TEXT UNIQUE NOT NULL,
-  hash TEXT NOT NULL
-);

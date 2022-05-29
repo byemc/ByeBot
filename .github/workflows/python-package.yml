@@ -32,7 +32,7 @@ jobs:
     - name: Properly install the server module
       run: |
         git clone https://gitlab.com/marwynnsomridhivej/dpy-http-server.git
-        cp dpy-http-server/server ./server
+        cp dpy-http-server/server ./server -r
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

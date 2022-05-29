@@ -9,7 +9,7 @@ function checkOnline() {
     });
 }
 
-bbonline = checkOnline();
+bbonline = JSON.parse(checkOnline());
 if (bbonline.online) {
     document.getElementById('onl-indicator').innerHTML = 'Online';
     document.getElementById('onl-indicator').style.color = '#00ff00';

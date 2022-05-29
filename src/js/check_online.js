@@ -1,7 +1,20 @@
 
-bb_response = fetch("https://bbapi.byemc.xyz/info").then(response => response.json()).catch(error => {
-    console.error(error);
-    return {};
-});
+function checkOnline() {
+    return fetch('https://bbapi.byemc.xyz/info').then(response => {
+        if (response.contentType === 'application/json') {
+            return response.json();
+        } else {
+            return {};
+        }
+    });
+}
 
-console.log(bb_response);
+bbonline = checkOnline();
+if (bbonline.online) {
+    document.getElementById('onl-indicator').innerHTML = 'Online';
+    document.getElementById('onl-indicator').style.color = '#00ff00';
+}
+else {
+    document.getElementById('onl-indicator').innerHTML = 'Offline';
+    document.getElementById('onl-indicator').style.color = '#ff0000';
+}

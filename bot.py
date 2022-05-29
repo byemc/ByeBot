@@ -1,4 +1,5 @@
 import os
+from wsgiref import headers
 from nextcord.ext import commands
 import nextcord
 import sys
@@ -176,7 +177,7 @@ class GitHub(commands.Cog, name="GitHub"):
 
 @server.add_route(path="/info", method="GET")
 async def http_info(request):
-    return aiohttp.web.json_response(data={"online": True, "version": verstring, "verarray": [version[0], version[1], version[2]], "debug": debugMode}, status=200)
+    return aiohttp.web.json_response(data={"online": True, "version": verstring, "verarray": [version[0], version[1], version[2]], "debug": debugMode}, status=200, headers={"Content-Type": "application/json", "Access-Control-Allow-Origin": "https://bbapi.byemc.xyz,http://localhost:4000"})
 @server.add_route(path="/", method="GET")
 async def http_index(request):
     '''Returns a redirect to `byemc.xyz/byebot`'''

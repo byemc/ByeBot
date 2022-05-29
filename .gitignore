@@ -2,3 +2,5 @@ api.txt
 byebotpic.pdn
 .env
 database.db
+_site/
+.jekyll-cache/

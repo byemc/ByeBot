@@ -5,7 +5,7 @@
 
 A bot by [Bye](https://byemc.xyz/)
 
-Thos could be written better... open a PR to help out!
+This could be written better... open a PR to help out!
 
 ![ByeBot logo](https://static.byemc.xyz/byebot/byebotpic.png)
 
@@ -46,5 +46,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+Paticular thanks to @Taureon for helping with the `botinvite` command!
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

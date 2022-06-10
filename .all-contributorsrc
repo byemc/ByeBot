@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "Taureon",
+      "name": "Taureon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45183108?v=4",
+      "profile": "https://github.com/Taureon",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "ByeBot",
+  "projectOwner": "byemc",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

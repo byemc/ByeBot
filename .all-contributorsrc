@@ -13,6 +13,20 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "byemc",
+      "name": "Bye",
+      "avatar_url": "https://avatars.githubusercontent.com/u/77801870?v=4",
+      "profile": "http://byemc.xyz",
+      "contributions": [
+        "code",
+        "design",
+        "ideas",
+        "bug",
+        "doc",
+        "content"
+      ]
     }
   ],
   "contributorsPerLine": 7,

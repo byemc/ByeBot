@@ -16,7 +16,7 @@ myPermissionsInt = 405810835062
 
 debugMode = False
 
-version = (0,1,0)
+version = (0,1,1)
 verstring = f"{version[0]}.{version[1]}.{version[2]}"
 
 #import .env variables
@@ -57,12 +57,12 @@ class misc(commands.Cog, name='Misc.'):
         embed=nextcord.Embed(title="ByeBot Details", description=f"Running on {len(self.bot.guilds)} servers")
         embed.set_thumbnail(url=self.bot.user.avatar)
         embed.set_author(name=f"ByeBot", icon_url=f"{self.bot.user.avatar}")
-        embed.add_field(name="Creator", value="[Bye](https://twitter.com/_byemc)", inline=True)
-        embed.add_field(name="Server", value="Replit", inline=True)
+        embed.add_field(name="Creator", value="[Bye](https://bye.url.lol/twitter)", inline=True)
+        embed.add_field(name="Hosting", value="[Contabo](https://contabo.com) VPS S", inline=True)
         embed.add_field(name="Uptime", value=uptime, inline=True)
         embed.add_field(name="Latency", value=f"{round(self.bot.latency*1000)}ms")
-        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
         embed.add_field(name="Language", value=f"Python {platform.python_version()}")
+        embed.set_footer(text=f"Requested by {ctx.message.author}", icon_url=userAvatarUrl)
         await ctx.send(embed=embed)
 
     @commands.command(name="avatar", brief="Get a user's avatar", description="Returns the avatar of the requested user")
@@ -177,7 +177,7 @@ class GitHub(commands.Cog, name="GitHub"):
 
 @server.add_route(path="/info", method="GET")
 async def http_info(request):
-    return aiohttp.web.json_response(data={"online": True, "version": verstring, "verarray": [version[0], version[1], version[2]], "debug": debugMode}, status=200, headers={"Content-Type": "application/json", "Access-Control-Allow-Origin": "https://bbapi.byemc.xyz,http://localhost:4000"})
+    return aiohttp.web.json_response(data={"online": True, "version": verstring, "verarray": [version[0], version[1], version[2]], "debug": debugMode}, status=200, headers={"Content-Type": "application/json", "Access-Control-Allow-Origin": "www.byemc.xyz"})
 @server.add_route(path="/", method="GET")
 async def http_index(request):
     '''Returns a redirect to `byemc.xyz/byebot`'''

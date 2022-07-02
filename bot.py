@@ -1,5 +1,4 @@
 import os
-from wsgiref import headers
 from nextcord.ext import commands
 import nextcord
 import sys
@@ -36,7 +35,7 @@ async def on_ready():
         port="8000",
     )
     await bot.server.start()
-
+    bot.change_presence(activity=nextcord.Activity(type=nextcord.Activity.playing, name="RIP Technoblade 👑"))
     if debugMode:
         await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="Currently in debug mode. Expect me to go down!"))
     global startTime #global variable to be used later in cog

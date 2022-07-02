@@ -35,7 +35,7 @@ async def on_ready():
         port="8000",
     )
     await bot.server.start()
-    bot.change_presence(activity=nextcord.Activity(type=nextcord.Activity.playing, name="RIP Technoblade 👑"))
+    bot.change_presence(activity=nextcord.Activity(type=nextcord.Activity.watching, name="RIP Technoblade 👑"))
     if debugMode:
         await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.watching, name="Currently in debug mode. Expect me to go down!"))
     global startTime #global variable to be used later in cog

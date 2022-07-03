@@ -1,14 +1,12 @@
 import os
 from nextcord.ext import commands
 import nextcord
-import sys
 import datetime, time #this is the important set for generating an uptime
 import platform
 import random
 from dotenv import load_dotenv
 import whois
-import sqlite3
-import requests,json
+import requests
 import server, aiohttp
 
 myPermissionsInt = 405810835062

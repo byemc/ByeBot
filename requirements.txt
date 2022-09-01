@@ -3,3 +3,4 @@ python-dotenv
 python-whois
 requests
 aiohttp
+pytest
